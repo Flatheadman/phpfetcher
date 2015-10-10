@@ -1,4 +1,17 @@
 <?php
-//test __FILE__ 
-require_once('phpfetcher.php');
-?>
+function &test()
+{
+    static $var1=99;
+    $var1+=10;
+    echo $var1.'&nbsp;';
+    return $var1;
+}
+test();
+test();
+test();
+$a=&test();
+$a=1000;
+test();
+//1.添加了static修饰符的变量即使在该函数执行完毕值仍然不会丢失，也就是说，在下一次调用这个函数时，变量仍然记得原来的值。
+//2.这里有一点需要注意的是，变量的赋值操作只会在变量第一次初始化时会被调用，在之后函数的执行过程中，这个操作不会被调用。
+?> 

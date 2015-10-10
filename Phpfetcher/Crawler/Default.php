@@ -19,7 +19,7 @@ abstract class Phpfetcher_Crawler_Default extends Phpfetcher_Crawler_Abstract {
     const STR_TYPE = 2;
     const ARR_TYPE = 3;
 
-    protected static $arrJobFieldTypes = array(
+    protected static $arrJobFieldTypes = array(//任务数组的标准模版
         'start_page' => self::STR_TYPE, 
         'link_rules' => self::ARR_TYPE, 
         'max_depth'  => self::INT_TYPE, 
@@ -118,9 +118,9 @@ abstract class Phpfetcher_Crawler_Default extends Phpfetcher_Crawler_Abstract {
             if ($intOptType === self::MODIFY_JOBS_SET) {
                 $this->_arrFetchJobs = array();
             }
-            foreach ($arrInput as $job_name => $job_rules) {
-                $this->_correctJobParam($job_rules);
-                if ($this->_isJobValid($job_rules)) {
+            foreach ($arrInput as $job_name => $job_rules) {//一个$arrInput数组有可能传进来多个抓取任务
+                $this->_correctJobParam($job_rules);//检查深度和最大页数使其不超过设置的最大值
+                if ($this->_isJobValid($job_rules)) {//检查传入的数组的格式是否符合标准
                     $this->_arrFetchJobs[$job_name] = $job_rules;
                 } else {
                     $arrInvalidJobs[] = $job_name;
@@ -131,7 +131,7 @@ abstract class Phpfetcher_Crawler_Default extends Phpfetcher_Crawler_Abstract {
                 unset($this->_arrFetchJobs[$job_name]);
             }
         } else {
-            Phpfetcher_Log::warning("Unknown options for fetch jobs [{$intOptType}]");
+            Phpfetcher_Log::warning("Unknown options for fetch jobs [{$intOptType}]");//静态函数不需要实例化
         }
 
 
@@ -256,7 +256,7 @@ abstract class Phpfetcher_Crawler_Default extends Phpfetcher_Crawler_Abstract {
         return $this;
     }
 
-    protected function _correctJobParam(&$job_rules) {
+    protected function _correctJobParam(&$job_rules) {//检查深度和最大页数使其不超过设置的最大值
         /*
         foreach (self::$arrJobDefaultFields as $field => $value) {
             if (!isset($job_rules[$field]) || ($job_rules['']))
@@ -275,7 +275,7 @@ abstract class Phpfetcher_Crawler_Default extends Phpfetcher_Crawler_Abstract {
      * @author xuruiqi
      * @desc check if a rule is valid
      */
-    protected function _isJobValid($arrRule) {
+    protected function _isJobValid($arrRule) {//检查传入的任务数组是否符合规定的标准模版
         foreach (self::$arrJobFieldTypes as $field => $type) {
             if (!isset($arrRule[$field]) || ($type === self::ARR_TYPE && !is_array($arrRule[$field]))) {
                 return FALSE;
@@ -307,6 +307,16 @@ abstract class Phpfetcher_Crawler_Default extends Phpfetcher_Crawler_Abstract {
 
     public function clearHash() {
         $this->_arrHash = array();
+    }
+
+    public function __get($name){
+        if(!isset($this->$name)){
+            echo "no such variable!";
+            return 0;
+        }
+
+        return $this->$name;
+
     }
 }
 ?>
